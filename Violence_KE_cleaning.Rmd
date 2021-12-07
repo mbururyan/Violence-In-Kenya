@@ -1,0 +1,138 @@
+META GROUP PROJECT
+
+VIOLENCE IN KENYA
+
+# Loading the libraries
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(caret)
+```
+
+
+
+# Loading the Dataset
+
+```{r}
+
+data <- read.csv('~/Documents/DS-Projects/R/Meta-Violence/Violence In Kenya.csv', na.strings = c("", NA))
+
+#Load first 6 rows
+
+head(data)
+
+```
+
+# Inspecting Dataset
+
+```{r}
+# No of rows
+nrow(data)
+```
+
+
+```{r}
+# No of columns
+ncol(data)
+```
+
+# Drop Irrelevant Columns
+
+```{r}
+# Load data
+head(data)
+```
+
+
+```{r}
+# Will filter data to drop last 10 columns as they add nothing to our data
+
+data <- data[, 1 : 26]
+
+head(data)
+```
+```{r}
+# Will drop the id columns
+
+# Create vector with column names to be dropped
+
+drops <- c('X', 'GWNO', 'EVENT_ID_CNTY', 'EVENT_ID_NO_CNTY', 'TIME_PRECISION', 'ALLY_ACTOR_1', 'ALLY_ACTOR_2', 'INTER1', 'INTER2', 'INTERACTION', 'GEO_PRECISION')
+
+# Drop columns where column name is listed in the vector
+
+data <- data[, !(names(data) %in% drops)]
+
+head(data)
+```
+```{r}
+# Renaming Columns
+
+# Actor2 column name to Victim
+names(data)[names(data) == 'ACTOR2'] <- 'VICTIMS'
+names(data)[names(data) == 'ACTOR1'] <- 'PERPRETATORS'
+
+# Print column names
+names(data)
+```
+
+
+# Null values
+
+```{r}
+# Find the sum of null values per column
+
+colSums(is.na(data))
+
+```
+```{r}
+# Will replace the null values in victims columns as unidentified, as there were recorded events of violence but the victims might be non existent or not identified
+
+data$VICTIMS[is.na(data$VICTIMS)] <- 'Unitentified'
+```
+
+```{r}
+# The source column has two missing values, and will be dropped
+data <- na.omit(data)
+```
+
+```{r}
+# New dataset
+colSums(is.na(data))
+```
+
+
+# Duplicates
+
+```{r}
+dups <- data[duplicated(data),]
+
+#14 duplicates detected, will be dropped to avoid redundancy in the data
+data <- data[!duplicated(data),]
+```
+
+
+```{r}
+# Check if any left
+data[duplicated(data),]
+```
+
+
+# Outliers
+
+```{r}
+boxplot(data$FATALITIES)
+```
+Outliers will not be dropped as they may represent the intensity of the killings.
+
+
+# Exporting the csv
+
+```{r}
+write.csv(data, '~/Documents/DS-Projects/R/Meta-Violence/clean_violence_KE_two.csv')
+```
+
+
+
+
+
