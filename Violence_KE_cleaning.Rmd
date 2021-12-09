@@ -57,7 +57,7 @@ head(data)
 
 # Create vector with column names to be dropped
 
-drops <- c('X', 'GWNO', 'EVENT_ID_CNTY', 'EVENT_ID_NO_CNTY', 'TIME_PRECISION', 'ALLY_ACTOR_1', 'ALLY_ACTOR_2', 'INTER1', 'INTER2', 'INTERACTION', 'GEO_PRECISION')
+drops <- c('X', 'GWNO', 'EVENT_ID_CNTY', 'EVENT_ID_NO_CNTY', 'TIME_PRECISION', 'ALLY_ACTOR_1', 'ALLY_ACTOR_2', 'INTER1', 'INTER2', 'INTERACTION')
 
 # Drop columns where column name is listed in the vector
 
@@ -129,9 +129,12 @@ Outliers will not be dropped as they may represent the intensity of the killings
 # Exporting the csv
 
 ```{r}
-write.csv(data, '~/Documents/DS-Projects/R/Meta-Violence/clean_violence_KE_two.csv')
+write.csv(data, '~/Documents/DS-Projects/R/Meta-Violence/clean_violence_KE_map.csv')
 ```
 
+```{r}
+head(data)
+```
 
 
 

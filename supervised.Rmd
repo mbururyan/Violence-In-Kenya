@@ -1,0 +1,72 @@
+# VIOLENCE IN KENYA
+
+# UNSUPERVISED LEARNING
+
+```{r}
+library(tidyverse)
+library(data.table)
+```
+
+ 
+```{r}
+head(df2)
+
+```
+
+# Pick columns to be fed into model
+
+```{r}
+df_model <- df2[, c(7, 2, 16)]
+head(df_model)
+```
+
+
+```{r}
+trainer <- createDataPartition(y=df_model$FATALITIES, p = 0.8, list = FALSE)
+
+training_data <- df_model[trainer,]
+testing_data <- df_model[-trainer,]
+```
+
+```{r}
+library(randomForest)
+```
+
+
+# RF
+
+```{r}
+tree <- randomForest(FATALITIES ~ .,
+                     data = training_data,
+                     mtry = 3,
+                     importance = TRUE,
+                     na.action = na.omit)
+```
+
+```{r}
+tree
+```
+
+```{r}
+
+predict(tree, testing_data)
+```
+
+```{r}
+df_input <- data.frame(
+  ADMIN1 = 'Bungoma',
+  YEAR = 1999
+)
+
+predict(tree, df_input)
+```
+
+
+
+
+
+
+
+
+
+

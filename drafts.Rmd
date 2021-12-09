@@ -1,0 +1,137 @@
+# Line graph ya year vs total casualties
+
+```{r}
+
+```
+
+
+```{r}
+head(data)
+```
+
+
+```{r}
+
+library(data.table)
+
+df2 <- data.table(data)
+year_kills <- df2[, sum(FATALITIES), by = YEAR]
+
+
+```
+
+```{r}
+library(dplyr)
+
+df_map_new <- df_map %>%
+  group_by(ADMIN1) %>%
+  summarise(FATALITIES = sum(FATALITIES))
+
+df_map_new
+
+# Join latitude and longitude
+
+df_map_new2 <- left_join(df_map, df_map_new, by = 'ADMIN1')
+```
+```{r}
+# Sort in ascending order
+
+top10_counties <- df_map_new[order(-df_map_new$FATALITIES),]
+top10_counties <- top10_counties[1 : 10,]
+
+bottom10_counties <- df_map_new[order(df_map_new$FATALITIES),]
+bottom10_counties <- bottom10_counties[1 : 10,]
+```
+
+```{r}
+# Plot top 10 affected counties
+barplot(top10_counties$FATALITIES, names.arg = top10_counties$ADMIN1, col = 'red')
+```
+
+
+```{r}
+
+plot(year_kills$YEAR, year_kills$V1, type = 'o')
+
+```
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+
+install.packages('sf')
+
+```
+```{r}
+# Sort counties by total fatalities
+
+
+```
+
+```{r}
+install.packages('maps')
+```
+
+```{r}
+library(maps)
+```
+```{r}
+#separate df for maps as tibble
+
+df_geo <- read_csv('~/Documents/DS-Projects/R/Meta-Violence/clean_violence_KE_map.csv')
+df_map <- df_geo[, c(13, 12, 14, 8, 17)]
+
+df_map <- as_tibble(df_map)
+
+df_map
+```
+
+```{r}
+map_one <- df_map %>%
+  ggplot(
+    data = df_map,
+    mapping = aes(x = LONGITUDE,
+                  y = LATITUDE,
+                  group = GEO_PRECISION,
+                  fill = FATALITIES
+                  )
+  ) 
+
+map_one
+```
+```{r}
+
+df_map_new3 <- df_map_new2[, c(1, 2, 4, 6)]
+unique(df_map_new3)
+```
+```{r}
+library(shiny)
+
+library(dplyr)
+
+library(leaflet)
+
+library(DT)
+```
+
+```{r}
+devtools::install_github("rstudio/leaflet")
+```
+
+
+```{r}
+df_filteredd <- filter(df2, df2$ADMIN1 == 'Nairobi')
+# Plot most common victims
+plott <- ggplot(data = df_filteredd, aes(x = factor(EVENT_TYPE)))+
+  geom_bar(stat = 'count', fill = 'steelblue')
+```
+```{r}
+unique(df_filteredd$EVENT_TYPE)
+```
+
+```{r}
+ggplotly(plott)
+```
+
